@@ -2,126 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ben's 2026 Command Center</title>
+    <title>Ben's 2026 Legacy Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24;
-        }
+        :root { --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24; --danger: #ef4444; --success: #22c55e; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
-        .card { background: var(--card); border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #334155; }
-        h2 { margin-top: 0; color: var(--accent); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334155; position: relative; }
+        h2 { margin-top: 0; color: var(--accent); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         
-        /* Keziyah Photo Section */
-        #photo-container { width: 100%; height: 300px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; background: #334155; }
-        #keziyah-photo { width: 100%; height: 100%; object-fit: cover; }
+        /* Disney Countdown */
+        #countdown { font-size: 1.5rem; font-weight: bold; color: var(--gold); text-align: center; margin: 10px 0; }
         
-        /* Task List */
-        ul { list-style: none; padding: 0; }
-        li { padding: 10px 0; border-bottom: 1px solid #334155; display: flex; align-items: center; }
-        input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
-        .editable { background: transparent; border: none; color: var(--text); width: 80%; font-size: 1rem; outline: none; }
+        /* Market Tickers */
+        .ticker-wrap { display: flex; justify-content: space-around; margin-top: 15px; }
+        .ticker-box { text-align: center; background: #0f172a; padding: 10px; border-radius: 8px; width: 45%; border: 1px solid #334155; }
+        .price { font-size: 1.2rem; display: block; font-weight: bold; color: var(--accent); }
 
-        /* Trading Dashboard */
-        .trading-stat { display: flex; justify-content: space-between; margin: 15px 0; font-weight: bold; }
-        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
-        .wait { background: #991b1b; color: #fef2f2; }
-        .trade { background: #166534; color: #f0fdf4; }
-
-        /* Legacy Quote */
-        #quote { font-style: italic; color: var(--gold); font-size: 1.1rem; line-height: 1.6; }
+        /* Tasks */
+        .task-item { display: flex; align-items: center; margin: 12px 0; }
+        .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.95rem; outline: none; border-bottom: 1px dotted #475569; }
         
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 2rem; color: var(--text); }
-        .header p { color: #94a3b8; margin: 5px 0; }
+        #quote { font-style: italic; color: #94a3b8; font-size: 0.9rem; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 10px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .btn-save { background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>THE LEGACY LOCK : 2026</h1>
-        <p id="date-display"></p>
+        <h1 style="margin:0; letter-spacing: 4px;">BENJAMIN CLARKE INC.</h1>
+        <p style="color: var(--gold); font-weight: bold;">DIRECTIVE: SECURE THE PRINCIPAL</p>
     </div>
 
     <div class="grid">
         <div class="card">
-            <h2>The Legacy</h2>
-            <div id="photo-container">
-                <img id="keziyah-photo" src="https://via.placeholder.com/400x300?text=Keziyah+Photo+1" alt="Keziyah">
+            <h2>The Legacy Reward (May 16)</h2>
+            <div id="countdown">Loading...</div>
+            <p style="text-align: center; font-size: 0.8rem; color: #94a3b8;">Days until Keziyah's Disney Adventure</p>
+            <div style="height: 150px; background: #334155; border-radius: 8px; margin-top: 10px; overflow: hidden;">
+                <img id="keziyah-photo" src="https://via.placeholder.com/400x300?text=Keziyah+Photo" style="width:100%; height:100%; object-fit:cover;">
             </div>
+        </div>
+
+        <div class="card">
+            <h2>Daily Revenue Focus</h2>
+            <div class="task-item"><input type="checkbox"> <input class="editable" id="t1" value="Morning Revenue Task"></div>
+            <div class="task-item"><input type="checkbox"> <input class="editable" id="t2" value="Cornerstone Systems Audit"></div>
+            <div class="task-item"><input type="checkbox"> <input class="editable" id="t3" value="Legacy Lock Action"></div>
+            <button class="btn-save" onclick="saveData()">LOCK TASKS FOR TODAY</button>
             <p id="quote">"A good name is better than precious ointment..."</p>
         </div>
 
         <div class="card">
-            <h2>Revenue Tasks</h2>
-            <p style="font-size: 0.8rem; color: #94a3b8;">Focus on the Big 3. Intelligence is no substitute for action.</p>
-            <ul id="task-list">
-                <li><input type="checkbox"> <input class="editable" value="Morning Revenue Task (BC Inc)"></li>
-                <li><input type="checkbox"> <input class="editable" value="Cornerstone Systems Audit"></li>
-                <li><input type="checkbox"> <input class="editable" value="Secure the Principal Move"></li>
-            </ul>
-            <button onclick="saveTasks()" style="margin-top:10px; padding: 5px 10px; cursor: pointer;">Save Tasks</button>
-        </div>
-
-        <div class="card">
-            <h2>Asset Manager ($2,500)</h2>
-            <div class="trading-stat">
-                <span>Timeframe:</span>
-                <span>DAILY / 4-HOUR</span>
+            <h2>Ticker Monitor (4H Levels)</h2>
+            <div class="ticker-wrap">
+                <div class="ticker-box">
+                    <span style="font-size: 0.7rem;">TQQQ (BULL)</span>
+                    <span class="price" id="tqqq-price">--</span>
+                </div>
+                <div class="ticker-box">
+                    <span style="font-size: 0.7rem;">SQQQ (BEAR)</span>
+                    <span class="price" id="sqqq-price">--</span>
+                </div>
             </div>
-            <div class="trading-stat">
-                <span>Market Status:</span>
-                <span id="market-status" class="status-pill wait">WAIT FOR LEVEL</span>
+            <div style="margin-top:20px; padding:10px; background: #0f172a; border-radius: 8px; font-size: 0.85rem;">
+                <strong>4H Strategy:</strong> 
+                <p>1. Price at Support? ➔ <strong>TQQQ</strong></p>
+                <p>2. Price at Resistance? ➔ <strong>SQQQ</strong></p>
+                <p>3. In the middle? ➔ <strong>DO NOTHING.</strong></p>
             </div>
-            <div style="background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                <p style="margin: 0; font-size: 0.9rem;"><strong>Strategy:</strong> Trade between 4H support/resistance only. Ignore the 5-min noise. Check once daily.</p>
-            </div>
-            <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px;">Target: Secure the principal for the family name.</p>
+            <div id="market-status" style="text-align:center; padding: 10px; border-radius: 5px; margin-top: 10px; font-weight: bold; background: var(--danger);">STATUS: WAIT FOR LEVEL</div>
         </div>
     </div>
 
     <script>
-        // DATE DISPLAY
-        document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        // DISNEY COUNTDOWN
+        const targetDate = new Date("May 16, 2026 08:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("countdown").innerHTML = days + " DAYS";
+        }, 1000);
 
-        // QUOTES (Ecclesiastes & Business Principles)
-        const quotes = [
-            '"A good name is better than precious ointment; and the day of death than the day of one\'s birth." (Eccl 7:1)',
-            '"Sorrow is better than laughter: for by the sadness of the countenance the heart is made better." (Eccl 7:3)',
-            "Launch at 70% readiness. Do not wait for perfection.",
-            "Kill the expert persona. Just be the guy who executes.",
-            "Is this move building a legacy for Keziyah, or is it a distraction?",
-            "Intelligence is no substitute for action. Do the work."
-        ];
-        
-        // PHOTO ROTATION (Add your actual photo URLs here!)
-        const photos = [
-            "https://via.placeholder.com/400x300?text=Keziyah+Day+1",
-            "https://via.placeholder.com/400x300?text=Keziyah+Day+2",
-            "https://via.placeholder.com/400x300?text=Keziyah+Day+3"
-        ];
-
-        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-        
-        document.getElementById('quote').innerText = quotes[dayOfYear % quotes.length];
-        document.getElementById('keziyah-photo').src = photos[dayOfYear % photos.length];
-
-        // LOCAL STORAGE FOR TASKS
-        function saveTasks() {
-            const tasks = Array.from(document.querySelectorAll('.editable')).map(input => input.value);
-            localStorage.setItem('benTasks', JSON.stringify(tasks));
-            alert('Tasks Locked In.');
+        // TASK SAVING
+        function saveData() {
+            const tasks = [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value];
+            localStorage.setItem('benDashboardTasks', JSON.stringify(tasks));
+            alert("Systems Locked.");
         }
 
         window.onload = () => {
-            const saved = JSON.parse(localStorage.getItem('benTasks'));
+            const saved = JSON.parse(localStorage.getItem('benDashboardTasks'));
             if (saved) {
-                const inputs = document.querySelectorAll('.editable');
-                saved.forEach((val, i) => { if(inputs[i]) inputs[i].value = val; });
+                document.getElementById('t1').value = saved[0];
+                document.getElementById('t2').value = saved[1];
+                document.getElementById('t3').value = saved[2];
             }
-        }
+        };
+
+        // SIMPLE PRICE SIMULATION (Replace with AlphaVantage or similar API key for live data)
+        // For now, these reminders keep you focused on the LEVEL, not the cent.
+        document.getElementById('tqqq-price').innerText = "WATCH";
+        document.getElementById('sqqq-price').innerText = "LEVELS";
     </script>
 </body>
 </html>
