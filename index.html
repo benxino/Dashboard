@@ -6,33 +6,26 @@
     <title>Ben's 2026 Legacy Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24; --danger: #ef4444; --success: #22c55e; }
+        :root { --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24; --danger: #ef4444; --success: #22c55e; --neutral: #475569; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; width: 100%; max-width: 1400px; padding: 15px; box-sizing: border-box; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         h2 { margin-top: 0; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px; }
         #countdown { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-align: center; }
-        
-        /* Ticker Container */
         .tv-widget { width: 100%; height: 46px; background: #020617; border-bottom: 1px solid #334155; overflow: hidden; }
-        
         .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.9rem; outline: none; border-bottom: 1px dotted #475569; margin: 5px 0; }
         .btn-action { background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8rem; }
         .btn-secondary { background: #334155; color: #fff; text-decoration: none; text-align: center; display: block; padding: 8px; border-radius: 6px; font-size: 0.75rem; margin-top: 10px; }
-        #market-status { text-align:center; padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
-        .status-wait { background: #450a0a; color: #fecaca; }
-        .status-trade { background: #064e3b; color: #d1fae5; }
-        .header { text-align: center; margin: 15px 0; }
         
-        /* THE DARK CALENDAR FIX */
-        .calendar-wrap { 
-            width: 100%; 
-            height: 300px; 
-            border-radius: 8px; 
-            overflow: hidden; 
-            background: #000; 
-            filter: invert(90%) hue-rotate(180deg); /* This flips the colors to dark mode */
-        }
+        /* Market & Position Status */
+        .status-box { text-align:center; padding: 12px; border-radius: 8px; margin-top: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; }
+        .status-wait { background: #450a0a; color: #fecaca; }
+        .status-level { background: #064e3b; color: #d1fae5; border: 1px solid var(--success); }
+        .pos-out { background: var(--neutral); color: #cbd5e1; }
+        .pos-in { background: var(--accent); color: #020617; border: 2px solid #fff; }
+
+        .header { text-align: center; margin: 15px 0; }
+        .calendar-wrap { width: 100%; height: 300px; border-radius: 8px; overflow: hidden; background: #000; filter: invert(90%) hue-rotate(180deg); }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
@@ -42,19 +35,7 @@
         <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-            {
-              "symbols": [
-                { "proName": "NASDAQ:TQQQ", "title": "TQQQ" },
-                { "proName": "NASDAQ:SQQQ", "title": "SQQQ" },
-                { "proName": "NASDAQ:NDX", "title": "NAS100" }
-              ],
-              "showSymbolLogo": true,
-              "colorTheme": "dark",
-              "isTransparent": false,
-              "displayMode": "adaptive",
-              "locale": "en",
-              "backgroundColor": "#020617"
-            }
+            { "symbols": [{ "proName": "NASDAQ:TQQQ", "title": "TQQQ" },{ "proName": "NASDAQ:SQQQ", "title": "SQQQ" },{ "proName": "NASDAQ:NDX", "title": "NAS100" }], "colorTheme": "dark", "backgroundColor": "#020617", "isTransparent": false, "displayMode": "adaptive", "locale": "en" }
             </script>
         </div>
     </div>
@@ -97,65 +78,19 @@
         </div>
 
         <div class="card">
-            <h2>Asset Manager</h2>
-            <div id="market-status" class="status-wait" onclick="toggleStatus()">WAIT (NO-MAN'S LAND)</div>
-            <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 10px; line-height: 1.4;">
-                * TQQQ @ 48.50 | SQQQ @ 52.00<br>
-                * No level? No trade. Focus on BC Inc.
+            <h2>Asset Manager ($2,500)</h2>
+            <div style="font-size: 0.7rem; color: #94a3b8; margin-bottom: 5px;">Market Signal:</div>
+            <div id="market-status" class="status-box status-wait" onclick="toggleMarket()">WAIT (NO-MAN'S LAND)</div>
+            
+            <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 15px; margin-bottom: 5px;">Position Status:</div>
+            <div id="position-status" class="status-box pos-out" onclick="togglePosition()">OUT OF TRADE</div>
+            
+            <p style="font-size: 0.65rem; color: #64748b; margin-top: 10px; line-height: 1.3;">
+                * System: TQQQ @ 48.50 | SQQQ @ 52.00<br>
+                * Position Status confirms your exposure.
             </p>
         </div>
     </div>
 
     <script>
-        const targetDate = new Date("May 16, 2026 08:00:00").getTime();
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById("countdown").innerHTML = days + " DAYS";
-        }
-        setInterval(updateCountdown, 1000); updateCountdown();
-
-        function toggleStatus() {
-            const box = document.getElementById('market-status');
-            if (box.classList.contains('status-wait')) {
-                box.classList.remove('status-wait'); box.classList.add('status-trade');
-                box.innerText = "AT LEVEL - EXECUTE";
-            } else {
-                box.classList.remove('status-trade'); box.classList.add('status-wait');
-                box.innerText = "WAIT (NO-MAN'S LAND)";
-            }
-            localStorage.setItem('marketState', box.className);
-        }
-
-        function saveData() {
-            const tasks = [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value];
-            localStorage.setItem('benDashboardTasks', JSON.stringify(tasks));
-            alert("Tasks Saved.");
-        }
-
-        function saveFin() {
-            const fin = [document.getElementById('networth').value, document.getElementById('cashflow').value];
-            localStorage.setItem('benFinData', JSON.stringify(fin));
-            alert("Financial Audit Logged.");
-        }
-
-        window.onload = () => {
-            const savedTasks = JSON.parse(localStorage.getItem('benDashboardTasks'));
-            if (savedTasks) { document.getElementById('t1').value = savedTasks[0] || ""; document.getElementById('t2').value = savedTasks[1] || ""; document.getElementById('t3').value = savedTasks[2] || ""; }
-            
-            const savedFin = JSON.parse(localStorage.getItem('benFinData'));
-            if (savedFin) { document.getElementById('networth').value = savedFin[0] || ""; document.getElementById('cashflow').value = savedFin[1] || ""; }
-
-            const savedState = localStorage.getItem('marketState');
-            if (savedState) {
-                const box = document.getElementById('market-status');
-                box.className = savedState;
-                box.innerText = savedState.includes('wait') ? "WAIT (NO-MAN'S LAND)" : "AT LEVEL - EXECUTE";
-            }
-            const dayOfWeek = new Date().getDay(); 
-            document.getElementById('keziyah-photo').src = `k${dayOfWeek + 1}.jpg`;
-        };
-    </script>
-</body>
-</html>
+        const targetDate = new Date("May
