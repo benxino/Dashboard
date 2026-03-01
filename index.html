@@ -141,6 +141,16 @@
                 box.className = savedState;
                 box.innerText = savedState.includes('wait') ? "STATUS: WAIT (NO-MAN'S LAND)" : "STATUS: AT LEVEL - EXECUTE";
             }
+            window.onload = () => {
+    // EXISTING PERSISTENCE CODE...
+    
+    // DAILY PHOTO LOGIC
+    const dayOfWeek = new Date().getDay(); // Returns 0-6 (Sun-Sat)
+    const photoNum = dayOfWeek + 1; // Makes it 1-7
+    document.getElementById('keziyah-photo').src = `k${photoNum}.jpg`;
+    
+    // ... REST OF YOUR LOAD LOGIC
+};
         };
     </script>
 </body>
