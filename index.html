@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ben's 2026 Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .card { background: var(--card); border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #334155; }
+        h2 { margin-top: 0; color: var(--accent); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Keziyah Photo Section */
+        #photo-container { width: 100%; height: 300px; border-radius: 8px; overflow: hidden; margin-bottom: 10px; background: #334155; }
+        #keziyah-photo { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Task List */
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px 0; border-bottom: 1px solid #334155; display: flex; align-items: center; }
+        input[type="checkbox"] { margin-right: 15px; transform: scale(1.2); cursor: pointer; }
+        .editable { background: transparent; border: none; color: var(--text); width: 80%; font-size: 1rem; outline: none; }
+
+        /* Trading Dashboard */
+        .trading-stat { display: flex; justify-content: space-between; margin: 15px 0; font-weight: bold; }
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
+        .wait { background: #991b1b; color: #fef2f2; }
+        .trade { background: #166534; color: #f0fdf4; }
+
+        /* Legacy Quote */
+        #quote { font-style: italic; color: var(--gold); font-size: 1.1rem; line-height: 1.6; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 2rem; color: var(--text); }
+        .header p { color: #94a3b8; margin: 5px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>THE LEGACY LOCK : 2026</h1>
+        <p id="date-display"></p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>The Legacy</h2>
+            <div id="photo-container">
+                <img id="keziyah-photo" src="https://via.placeholder.com/400x300?text=Keziyah+Photo+1" alt="Keziyah">
+            </div>
+            <p id="quote">"A good name is better than precious ointment..."</p>
+        </div>
+
+        <div class="card">
+            <h2>Revenue Tasks</h2>
+            <p style="font-size: 0.8rem; color: #94a3b8;">Focus on the Big 3. Intelligence is no substitute for action.</p>
+            <ul id="task-list">
+                <li><input type="checkbox"> <input class="editable" value="Morning Revenue Task (BC Inc)"></li>
+                <li><input type="checkbox"> <input class="editable" value="Cornerstone Systems Audit"></li>
+                <li><input type="checkbox"> <input class="editable" value="Secure the Principal Move"></li>
+            </ul>
+            <button onclick="saveTasks()" style="margin-top:10px; padding: 5px 10px; cursor: pointer;">Save Tasks</button>
+        </div>
+
+        <div class="card">
+            <h2>Asset Manager ($2,500)</h2>
+            <div class="trading-stat">
+                <span>Timeframe:</span>
+                <span>DAILY / 4-HOUR</span>
+            </div>
+            <div class="trading-stat">
+                <span>Market Status:</span>
+                <span id="market-status" class="status-pill wait">WAIT FOR LEVEL</span>
+            </div>
+            <div style="background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <p style="margin: 0; font-size: 0.9rem;"><strong>Strategy:</strong> Trade between 4H support/resistance only. Ignore the 5-min noise. Check once daily.</p>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 15px;">Target: Secure the principal for the family name.</p>
+        </div>
+    </div>
+
+    <script>
+        // DATE DISPLAY
+        document.getElementById('date-display').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // QUOTES (Ecclesiastes & Business Principles)
+        const quotes = [
+            '"A good name is better than precious ointment; and the day of death than the day of one\'s birth." (Eccl 7:1)',
+            '"Sorrow is better than laughter: for by the sadness of the countenance the heart is made better." (Eccl 7:3)',
+            "Launch at 70% readiness. Do not wait for perfection.",
+            "Kill the expert persona. Just be the guy who executes.",
+            "Is this move building a legacy for Keziyah, or is it a distraction?",
+            "Intelligence is no substitute for action. Do the work."
+        ];
+        
+        // PHOTO ROTATION (Add your actual photo URLs here!)
+        const photos = [
+            "https://via.placeholder.com/400x300?text=Keziyah+Day+1",
+            "https://via.placeholder.com/400x300?text=Keziyah+Day+2",
+            "https://via.placeholder.com/400x300?text=Keziyah+Day+3"
+        ];
+
+        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+        
+        document.getElementById('quote').innerText = quotes[dayOfYear % quotes.length];
+        document.getElementById('keziyah-photo').src = photos[dayOfYear % photos.length];
+
+        // LOCAL STORAGE FOR TASKS
+        function saveTasks() {
+            const tasks = Array.from(document.querySelectorAll('.editable')).map(input => input.value);
+            localStorage.setItem('benTasks', JSON.stringify(tasks));
+            alert('Tasks Locked In.');
+        }
+
+        window.onload = () => {
+            const saved = JSON.parse(localStorage.getItem('benTasks'));
+            if (saved) {
+                const inputs = document.querySelectorAll('.editable');
+                saved.forEach((val, i) => { if(inputs[i]) inputs[i].value = val; });
+            }
+        }
+    </script>
+</body>
+</html>
