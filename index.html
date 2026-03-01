@@ -6,43 +6,64 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24; --danger: #ef4444; --success: #22c55e; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; padding: 20px; }
         .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334155; position: relative; }
-        h2 { margin-top: 0; color: var(--accent); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        h2 { margin-top: 0; color: var(--accent); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         
         /* Disney Countdown */
-        #countdown { font-size: 1.5rem; font-weight: bold; color: var(--gold); text-align: center; margin: 10px 0; }
+        #countdown { font-size: 1.8rem; font-weight: bold; color: var(--gold); text-align: center; margin: 10px 0; }
         
-        /* Market Tickers */
-        .ticker-wrap { display: flex; justify-content: space-around; margin-top: 15px; }
-        .ticker-box { text-align: center; background: #0f172a; padding: 10px; border-radius: 8px; width: 45%; border: 1px solid #334155; }
-        .price { font-size: 1.2rem; display: block; font-weight: bold; color: var(--accent); }
+        /* Market Widget */
+        .tv-widget { width: 100%; height: 40px; background: #0f172a; margin-bottom: 20px; border-bottom: 1px solid #334155; }
 
-        /* Tasks */
+        /* Tasks & Status */
         .task-item { display: flex; align-items: center; margin: 12px 0; }
         .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.95rem; outline: none; border-bottom: 1px dotted #475569; }
+        .btn-save { background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
         
-        #quote { font-style: italic; color: #94a3b8; font-size: 0.9rem; margin-top: 15px; border-left: 3px solid var(--gold); padding-left: 10px; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .btn-save { background: var(--accent); color: #000; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+        #market-status { text-align:center; padding: 15px; border-radius: 8px; margin-top: 15px; font-weight: bold; font-size: 1.1rem; cursor: pointer; border: 2px solid transparent; }
+        .status-wait { background: #450a0a; color: #fecaca; border-color: var(--danger); }
+        .status-trade { background: #064e3b; color: #d1fae5; border-color: var(--success); }
+
+        .header { text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
 
+    <div class="tv-widget">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+            {
+            "symbols": [
+                { "proName": "NASDAQ:TQQQ", "title": "TQQQ (BULL)" },
+                { "proName": "NASDAQ:SQQQ", "title": "SQQQ (BEAR)" },
+                { "proName": "NASDAQ:NDX", "title": "NASDAQ 100" }
+            ],
+            "showSymbolLogo": true,
+            "colorTheme": "dark",
+            "isTransparent": true,
+            "displayMode": "adaptive",
+            "locale": "en"
+            }
+            </script>
+        </div>
+    </div>
+
     <div class="header">
-        <h1 style="margin:0; letter-spacing: 4px;">BENJAMIN CLARKE INC.</h1>
-        <p style="color: var(--gold); font-weight: bold;">DIRECTIVE: SECURE THE PRINCIPAL</p>
+        <h1 style="margin:0; letter-spacing: 4px; font-size: 1.5rem;">BENJAMIN CLARKE INC.</h1>
+        <p style="color: var(--gold); font-weight: bold; margin: 5px 0;">4H LEVELS: 48.50 | 52.00</p>
     </div>
 
     <div class="grid">
         <div class="card">
             <h2>The Legacy Reward (May 16)</h2>
             <div id="countdown">Loading...</div>
-            <p style="text-align: center; font-size: 0.8rem; color: #94a3b8;">Days until Keziyah's Disney Adventure</p>
-            <div style="height: 150px; background: #334155; border-radius: 8px; margin-top: 10px; overflow: hidden;">
+            <div style="height: 180px; background: #334155; border-radius: 8px; margin-top: 10px; overflow: hidden;">
                 <img id="keziyah-photo" src="https://via.placeholder.com/400x300?text=Keziyah+Photo" style="width:100%; height:100%; object-fit:cover;">
             </div>
+            <p style="text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 10px;">Build the legacy lock today.</p>
         </div>
 
         <div class="card">
@@ -51,28 +72,27 @@
             <div class="task-item"><input type="checkbox"> <input class="editable" id="t2" value="Cornerstone Systems Audit"></div>
             <div class="task-item"><input type="checkbox"> <input class="editable" id="t3" value="Legacy Lock Action"></div>
             <button class="btn-save" onclick="saveData()">LOCK TASKS FOR TODAY</button>
-            <p id="quote">"A good name is better than precious ointment..."</p>
+            <p id="quote" style="font-style: italic; color: #94a3b8; font-size: 0.85rem; margin-top: 20px; border-left: 2px solid var(--gold); padding-left: 10px;">"A good name is better than precious ointment..."</p>
         </div>
 
         <div class="card">
-            <h2>Ticker Monitor (4H Levels)</h2>
-            <div class="ticker-wrap">
-                <div class="ticker-box">
-                    <span style="font-size: 0.7rem;">TQQQ (BULL)</span>
-                    <span class="price" id="tqqq-price">--</span>
-                </div>
-                <div class="ticker-box">
-                    <span style="font-size: 0.7rem;">SQQQ (BEAR)</span>
-                    <span class="price" id="sqqq-price">--</span>
-                </div>
+            <h2>Asset Manager ($2,500)</h2>
+            <div style="font-size: 0.85rem; margin-bottom: 10px;">
+                <strong>System:</strong> Buy TQQQ @ 48.50 | Buy SQQQ @ 52.00
             </div>
-            <div style="margin-top:20px; padding:10px; background: #0f172a; border-radius: 8px; font-size: 0.85rem;">
-                <strong>4H Strategy:</strong> 
-                <p>1. Price at Support? ➔ <strong>TQQQ</strong></p>
-                <p>2. Price at Resistance? ➔ <strong>SQQQ</strong></p>
-                <p>3. In the middle? ➔ <strong>DO NOTHING.</strong></p>
+            
+            <div id="market-status" class="status-wait" onclick="toggleStatus()">
+                STATUS: WAIT (NO-MAN'S LAND)
             </div>
-            <div id="market-status" style="text-align:center; padding: 10px; border-radius: 5px; margin-top: 10px; font-weight: bold; background: var(--danger);">STATUS: WAIT FOR LEVEL</div>
+            
+            <div style="margin-top:20px; padding:12px; background: #0f172a; border-radius: 8px; font-size: 0.8rem; line-height: 1.5;">
+                <strong>Aggressive Ignorance Checklist:</strong>
+                <ul style="padding-left: 20px; margin: 5px 0;">
+                    <li>Ignore the 5-minute noise.</li>
+                    <li>Is it 48.50 or 52.00?</li>
+                    <li>If NO, go back to revenue tasks.</li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -86,7 +106,22 @@
             document.getElementById("countdown").innerHTML = days + " DAYS";
         }, 1000);
 
-        // TASK SAVING
+        // STATUS TOGGLE (Manual Accountability)
+        function toggleStatus() {
+            const box = document.getElementById('market-status');
+            if (box.classList.contains('status-wait')) {
+                box.classList.remove('status-wait');
+                box.classList.add('status-trade');
+                box.innerText = "STATUS: AT LEVEL - EXECUTE";
+            } else {
+                box.classList.remove('status-trade');
+                box.classList.add('status-wait');
+                box.innerText = "STATUS: WAIT (NO-MAN'S LAND)";
+            }
+            localStorage.setItem('marketState', box.className);
+        }
+
+        // PERSISTENCE
         function saveData() {
             const tasks = [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value];
             localStorage.setItem('benDashboardTasks', JSON.stringify(tasks));
@@ -94,34 +129,19 @@
         }
 
         window.onload = () => {
-            const saved = JSON.parse(localStorage.getItem('benDashboardTasks'));
-            if (saved) {
-                document.getElementById('t1').value = saved[0];
-                document.getElementById('t2').value = saved[1];
-                document.getElementById('t3').value = saved[2];
+            const savedTasks = JSON.parse(localStorage.getItem('benDashboardTasks'));
+            if (savedTasks) {
+                document.getElementById('t1').value = savedTasks[0];
+                document.getElementById('t2').value = savedTasks[1];
+                document.getElementById('t3').value = savedTasks[2];
             }
-        }
-
-        // TRADING LEVELS - BEN'S 2026 SYSTEM
-const support = 48.50;
-const resistance = 52.00;
-
-// This is a placeholder for the price - in a real app, you'd fetch this.
-// For now, it forces YOU to think about the level vs the current price.
-const currentPrice = 50.25; // Update this manually in code if you want to see the bar change
-
-const statusBox = document.getElementById('market-status');
-
-if (currentPrice <= support) {
-    statusBox.innerText = "STATUS: BUY TQQQ (SUPPORT)";
-    statusBox.style.background = "var(--success)";
-} else if (currentPrice >= resistance) {
-    statusBox.innerText = "STATUS: BUY SQQQ (RESISTANCE)";
-    statusBox.style.background = "var(--success)";
-} else {
-    statusBox.innerText = "STATUS: WAIT (NO MAN'S LAND)";
-    statusBox.style.background = "var(--danger)";
-}
+            const savedState = localStorage.getItem('marketState');
+            if (savedState) {
+                const box = document.getElementById('market-status');
+                box.className = savedState;
+                box.innerText = savedState.includes('wait') ? "STATUS: WAIT (NO-MAN'S LAND)" : "STATUS: AT LEVEL - EXECUTE";
+            }
+        };
     </script>
 </body>
 </html>
