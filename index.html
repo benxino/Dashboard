@@ -12,7 +12,10 @@
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         h2 { margin-top: 0; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px; }
         #countdown { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-align: center; }
-        .tv-widget { width: 100%; height: 40px; background: #0f172a; border-bottom: 1px solid #334155; }
+        
+        /* Ticker Container */
+        .tv-widget { width: 100%; height: 46px; background: #020617; border-bottom: 1px solid #334155; overflow: hidden; }
+        
         .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.9rem; outline: none; border-bottom: 1px dotted #475569; margin: 5px 0; }
         .btn-action { background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8rem; }
         .btn-secondary { background: #334155; color: #fff; text-decoration: none; text-align: center; display: block; padding: 8px; border-radius: 6px; font-size: 0.75rem; margin-top: 10px; }
@@ -20,7 +23,17 @@
         .status-wait { background: #450a0a; color: #fecaca; }
         .status-trade { background: #064e3b; color: #d1fae5; }
         .header { text-align: center; margin: 15px 0; }
-        iframe { width: 100%; height: 300px; border: none; border-radius: 8px; background: #fff; }
+        
+        /* THE DARK CALENDAR FIX */
+        .calendar-wrap { 
+            width: 100%; 
+            height: 300px; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background: #000; 
+            filter: invert(90%) hue-rotate(180deg); /* This flips the colors to dark mode */
+        }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
@@ -29,7 +42,19 @@
         <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-            { "symbols": [{ "proName": "NASDAQ:TQQQ", "title": "TQQQ" },{ "proName": "NASDAQ:SQQQ", "title": "SQQQ" },{ "proName": "NASDAQ:NDX", "title": "NAS100" }], "colorTheme": "dark", "isTransparent": true, "displayMode": "adaptive", "locale": "en" }
+            {
+              "symbols": [
+                { "proName": "NASDAQ:TQQQ", "title": "TQQQ" },
+                { "proName": "NASDAQ:SQQQ", "title": "SQQQ" },
+                { "proName": "NASDAQ:NDX", "title": "NAS100" }
+              ],
+              "showSymbolLogo": true,
+              "colorTheme": "dark",
+              "isTransparent": false,
+              "displayMode": "adaptive",
+              "locale": "en",
+              "backgroundColor": "#020617"
+            }
             </script>
         </div>
     </div>
@@ -58,12 +83,13 @@
 
         <div class="card">
             <h2>Today's Schedule</h2>
-            <iframe src="https://calendar.google.com/calendar/embed?src=benxino%40gmail.com&mode=AGENDA&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff"></iframe>
+            <div class="calendar-wrap">
+                <iframe src="https://calendar.google.com/calendar/embed?src=benxino%40gmail.com&mode=AGENDA&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&bgcolor=%23ffffff"></iframe>
+            </div>
         </div>
 
         <div class="card">
             <h2>Financial Health</h2>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 5px;">Weekly Audit:</div>
             <input class="editable" id="networth" placeholder="Net Worth: $0.00">
             <input class="editable" id="cashflow" placeholder="Liquid Cash: $0.00">
             <button class="btn-action" onclick="saveFin()">LOG AUDIT</button>
@@ -74,7 +100,7 @@
             <h2>Asset Manager</h2>
             <div id="market-status" class="status-wait" onclick="toggleStatus()">WAIT (NO-MAN'S LAND)</div>
             <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 10px; line-height: 1.4;">
-                * System: TQQQ @ 48.50 | SQQQ @ 52.00<br>
+                * TQQQ @ 48.50 | SQQQ @ 52.00<br>
                 * No level? No trade. Focus on BC Inc.
             </p>
         </div>
