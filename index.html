@@ -11,26 +11,35 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; width: 100%; max-width: 1400px; padding: 15px; box-sizing: border-box; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         h2 { margin-top: 0; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px; }
-        #countdown { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-align: center; }
-        .tv-widget { width: 100%; height: 46px; background: #020617; border-bottom: 1px solid #334155; overflow: hidden; }
-        .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.9rem; outline: none; border-bottom: 1px dotted #475569; margin: 5px 0; }
-        .btn-action { background: var(--accent); color: #000; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8rem; }
-        .btn-simplifi { background: #334155; color: var(--gold); text-decoration: none; padding: 5px 15px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--gold); margin-left: 10px; vertical-align: middle; }
         
-        /* Liquidity Guard Styles */
+        /* Ticker Tape */
+        .tv-widget { width: 100%; height: 46px; background: #020617; border-bottom: 1px solid #334155; overflow: hidden; }
+        
+        /* Countdown & Mindset */
+        #countdown { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-align: center; }
+        #daily-mindset { color: var(--gold); font-style: italic; font-size: 0.95rem; margin: 5px 0; font-weight: 400; letter-spacing: 0.5px; }
+
+        /* Inputs & Buttons */
+        .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.9rem; outline: none; border-bottom: 1px dotted #475569; margin: 5px 0; }
+        .btn-action { background: var(--accent); color: #020617; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8rem; }
+        .btn-simplifi { background: #334155; color: var(--gold); text-decoration: none; padding: 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; border: 1px solid var(--gold); margin-top: auto; text-align: center; }
+
+        /* Liquidity Guard */
         .bill-item { padding: 10px; border-radius: 8px; margin-bottom: 8px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .bill-green { background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success); color: var(--success); }
         .bill-yellow { background: rgba(234, 179, 8, 0.1); border: 1px solid var(--warning); color: var(--warning); }
         .bill-red { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        .status-box { text-align:center; padding: 12px; border-radius: 8px; margin-top: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; }
-        .status-wait { background: #450a0a; color: #fecaca; }
-        .status-level { background: #064e3b; color: #d1fae5; }
+        /* Asset Manager */
+        .status-box { text-align:center; padding: 12px; border-radius: 8px; margin-top: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; border: 1px solid transparent; }
+        .status-wait { background: #450a0a; color: #fecaca; border-color: var(--danger); }
+        .status-level { background: #064e3b; color: #d1fae5; border-color: var(--success); }
         .pos-out { background: #475569; color: #cbd5e1; }
         .pos-in { background: var(--accent); color: #020617; border: 2px solid #fff; }
+        .level-reminder { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 8px; border-radius: 6px; font-size: 0.85rem; text-align: center; font-weight: bold; border: 1px solid rgba(56, 189, 248, 0.3); margin-bottom: 10px; }
 
-        .header { text-align: center; margin: 15px 0; }
+        .header { text-align: center; margin: 15px 0; max-width: 800px; }
         .calendar-wrap { width: 100%; height: 250px; border-radius: 8px; overflow: hidden; background: #000; filter: invert(90%) hue-rotate(180deg); }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -47,11 +56,8 @@
     </div>
 
     <div class="header">
-        <h1 style="margin:0; font-size: 1.4rem; letter-spacing: 3px;">
-            AYO BENJAMIN CLARKE 
-            <a href="https://simplifi.quicken.com/" target="_blank" class="btn-simplifi">OPEN SIMPLIFI</a>
-        </h1>
-        <p style="color: var(--gold); font-weight: bold; font-size: 0.8rem; margin: 3px 0;">4H LEVELS: 48.50 | 52.00</p>
+        <h1 style="margin:0; font-size: 1.4rem; letter-spacing: 3px;">AYO BENJAMIN CLARKE</h1>
+        <p id="daily-mindset">"A good name is better than precious ointment..."</p>
     </div>
 
     <div class="grid">
@@ -88,18 +94,32 @@
                 <span>Mortgage (12th)</span>
                 <span id="mort-days">--</span>
             </div>
-            <p style="font-size: 0.65rem; color: #94a3b8; margin-top: 5px; text-align: center;">Yellow = 5 days | Red = 2 days</p>
+            <a href="https://simplifi.quicken.com/" target="_blank" class="btn-simplifi">OPEN SIMPLIFI</a>
         </div>
 
         <div class="card">
             <h2>Asset Manager ($2,500)</h2>
+            <div class="level-reminder">4H LEVELS: 48.50 | 52.00</div>
+            
             <div id="market-status" class="status-box status-wait" onclick="toggleMarket()">WAIT (NO-MAN'S LAND)</div>
             <div id="position-status" class="status-box pos-out" onclick="togglePosition()">OUT OF TRADE</div>
+            <p style="font-size: 0.65rem; color: #64748b; margin-top: 10px; text-align: center;">Ignore the noise. Trade the signal.</p>
         </div>
     </div>
 
     <script>
-        // COUNTDOWN
+        // MINDSET ROTATION
+        const verses = [
+            '"A good name is better than precious ointment." (Eccl 7:1)',
+            '"Sorrow is better than laughter: for by the sadness of the countenance the heart is made better." (Eccl 7:3)',
+            '"Better is the end of a thing than the beginning thereof." (Eccl 7:8)',
+            '"The heart of the wise is in the house of mourning." (Eccl 7:4)',
+            "Intelligence is no substitute for action. Execute.",
+            "Launch at 70% readiness. Do not overthink it.",
+            "Kill the expert persona. Be the guy who gets it done."
+        ];
+
+        // COUNTDOWN logic
         const targetDate = new Date("May 16, 2026 08:00:00").getTime();
         function updateCountdown() {
             const now = new Date().getTime();
@@ -109,7 +129,7 @@
         }
         setInterval(updateCountdown, 1000);
 
-        // LIQUIDITY GUARD LOGIC
+        // LIQUIDITY GUARD logic
         function updateLiquidityGuard() {
             const now = new Date();
             const today = now.getDate();
@@ -122,17 +142,15 @@
                 return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
             }
 
-            function styleGuard(elementId, daysId, targetDay, label) {
+            function styleGuard(elementId, daysId, targetDay) {
                 const days = getDaysUntil(targetDay);
                 const el = document.getElementById(elementId);
                 const txt = document.getElementById(daysId);
                 txt.innerText = days + "d";
-                
                 el.className = "bill-item " + (days <= 2 ? "bill-red" : days <= 5 ? "bill-yellow" : "bill-green");
             }
-
-            styleGuard('guard-insurance', 'ins-days', 5, "Insurance");
-            styleGuard('guard-mortgage', 'mort-days', 12, "Mortgage");
+            styleGuard('guard-insurance', 'ins-days', 5);
+            styleGuard('guard-mortgage', 'mort-days', 12);
         }
 
         function toggleMarket() {
@@ -141,7 +159,6 @@
             else { box.className = 'status-box status-wait'; box.innerText = "WAIT (NO-MAN'S LAND)"; }
             localStorage.setItem('marketState', box.className);
         }
-
         function togglePosition() {
             const box = document.getElementById('position-status');
             if (box.classList.contains('pos-out')) { box.className = 'status-box pos-in'; box.innerText = "IN TRADE (EXPOSED)"; }
@@ -152,7 +169,7 @@
         function saveData() {
             const tasks = [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value];
             localStorage.setItem('benDashboardTasks', JSON.stringify(tasks));
-            alert("Tasks Saved.");
+            alert("Tasks Locked.");
         }
 
         window.onload = () => {
@@ -165,7 +182,6 @@
                 box.className = savedMarket;
                 box.innerText = savedMarket.includes('wait') ? "WAIT (NO-MAN'S LAND)" : "AT LEVEL - READY";
             }
-
             const savedPosition = localStorage.getItem('positionState');
             if (savedPosition) {
                 const box = document.getElementById('position-status');
@@ -177,6 +193,7 @@
             updateCountdown();
             const dayOfWeek = new Date().getDay(); 
             document.getElementById('keziyah-photo').src = `k${dayOfWeek + 1}.jpg`;
+            document.getElementById('daily-mindset').innerText = verses[dayOfWeek];
         };
     </script>
 </body>
