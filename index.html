@@ -100,12 +100,28 @@
                 document.getElementById('t2').value = saved[1];
                 document.getElementById('t3').value = saved[2];
             }
-        };
+        }
 
-        // SIMPLE PRICE SIMULATION (Replace with AlphaVantage or similar API key for live data)
-        // For now, these reminders keep you focused on the LEVEL, not the cent.
-        document.getElementById('tqqq-price').innerText = "WATCH";
-        document.getElementById('sqqq-price').innerText = "LEVELS";
+        // TRADING LEVELS - BEN'S 2026 SYSTEM
+const support = 48.50;
+const resistance = 52.00;
+
+// This is a placeholder for the price - in a real app, you'd fetch this.
+// For now, it forces YOU to think about the level vs the current price.
+const currentPrice = 50.25; // Update this manually in code if you want to see the bar change
+
+const statusBox = document.getElementById('market-status');
+
+if (currentPrice <= support) {
+    statusBox.innerText = "STATUS: BUY TQQQ (SUPPORT)";
+    statusBox.style.background = "var(--success)";
+} else if (currentPrice >= resistance) {
+    statusBox.innerText = "STATUS: BUY SQQQ (RESISTANCE)";
+    statusBox.style.background = "var(--success)";
+} else {
+    statusBox.innerText = "STATUS: WAIT (NO MAN'S LAND)";
+    statusBox.style.background = "var(--danger)";
+}
     </script>
 </body>
 </html>
