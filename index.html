@@ -93,4 +93,77 @@
     </div>
 
     <script>
-        const targetDate = new Date("May
+        const targetDate = new Date("May 16, 2026 08:00:00").getTime();
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("countdown").innerHTML = days + " DAYS";
+        }
+        setInterval(updateCountdown, 1000); updateCountdown();
+
+        // MARKET TOGGLE
+        function toggleMarket() {
+            const box = document.getElementById('market-status');
+            if (box.classList.contains('status-wait')) {
+                box.className = 'status-box status-level';
+                box.innerText = "AT LEVEL - READY";
+            } else {
+                box.className = 'status-box status-wait';
+                box.innerText = "WAIT (NO-MAN'S LAND)";
+            }
+            localStorage.setItem('marketState', box.className);
+        }
+
+        // POSITION TOGGLE
+        function togglePosition() {
+            const box = document.getElementById('position-status');
+            if (box.classList.contains('pos-out')) {
+                box.className = 'status-box pos-in';
+                box.innerText = "IN TRADE (EXPOSED)";
+            } else {
+                box.className = 'status-box pos-out';
+                box.innerText = "OUT OF TRADE";
+            }
+            localStorage.setItem('positionState', box.className);
+        }
+
+        function saveData() {
+            const tasks = [document.getElementById('t1').value, document.getElementById('t2').value, document.getElementById('t3').value];
+            localStorage.setItem('benDashboardTasks', JSON.stringify(tasks));
+            alert("Tasks Saved.");
+        }
+
+        function saveFin() {
+            const fin = [document.getElementById('networth').value, document.getElementById('cashflow').value];
+            localStorage.setItem('benFinData', JSON.stringify(fin));
+            alert("Financial Audit Logged.");
+        }
+
+        window.onload = () => {
+            const savedTasks = JSON.parse(localStorage.getItem('benDashboardTasks'));
+            if (savedTasks) { document.getElementById('t1').value = savedTasks[0] || ""; document.getElementById('t2').value = savedTasks[1] || ""; document.getElementById('t3').value = savedTasks[2] || ""; }
+            
+            const savedFin = JSON.parse(localStorage.getItem('benFinData'));
+            if (savedFin) { document.getElementById('networth').value = savedFin[0] || ""; document.getElementById('cashflow').value = savedFin[1] || ""; }
+
+            const savedMarket = localStorage.getItem('marketState');
+            if (savedMarket) { 
+                const box = document.getElementById('market-status');
+                box.className = savedMarket;
+                box.innerText = savedMarket.includes('wait') ? "WAIT (NO-MAN'S LAND)" : "AT LEVEL - READY";
+            }
+
+            const savedPosition = localStorage.getItem('positionState');
+            if (savedPosition) {
+                const box = document.getElementById('position-status');
+                box.className = savedPosition;
+                box.innerText = savedPosition.includes('pos-out') ? "OUT OF TRADE" : "IN TRADE (EXPOSED)";
+            }
+
+            const dayOfWeek = new Date().getDay(); 
+            document.getElementById('keziyah-photo').src = `k${dayOfWeek + 1}.jpg`;
+        };
+    </script>
+</body>
+</html>
