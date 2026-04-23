@@ -5,43 +5,225 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ben's 2026 Legacy Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #020617; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --gold: #fbbf24; --danger: #ef4444; --warning: #eab308; --success: #22c55e; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; width: 100%; max-width: 1400px; padding: 15px; box-sizing: border-box; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #334155; display: flex; flex-direction: column; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         h2 { margin-top: 0; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 12px; }
-        
-        /* Ticker Tape */
         .tv-widget { width: 100%; height: 46px; background: #020617; border-bottom: 1px solid #334155; overflow: hidden; }
-        
-        /* Countdown & Mindset */
         #countdown { font-size: 1.6rem; font-weight: bold; color: var(--gold); text-align: center; }
         #daily-mindset { color: var(--gold); font-style: italic; font-size: 0.95rem; margin: 5px 0; font-weight: 400; letter-spacing: 0.5px; }
-
-        /* Inputs & Buttons */
         .editable { background: transparent; border: none; color: var(--text); width: 100%; font-size: 0.9rem; outline: none; border-bottom: 1px dotted #475569; margin: 5px 0; }
         .btn-action { background: var(--accent); color: #020617; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; font-size: 0.8rem; }
         .btn-simplifi { background: #334155; color: var(--gold); text-decoration: none; padding: 10px; border-radius: 6px; font-size: 0.75rem; font-weight: bold; border: 1px solid var(--gold); margin-top: auto; text-align: center; }
-
-        /* Liquidity Guard */
         .bill-item { padding: 10px; border-radius: 8px; margin-bottom: 8px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .bill-green { background: rgba(34, 197, 94, 0.1); border: 1px solid var(--success); color: var(--success); }
         .bill-yellow { background: rgba(234, 179, 8, 0.1); border: 1px solid var(--warning); color: var(--warning); }
         .bill-red { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-
-        /* Asset Manager */
         .status-box { text-align:center; padding: 12px; border-radius: 8px; margin-top: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer; border: 1px solid transparent; }
         .status-wait { background: #450a0a; color: #fecaca; border-color: var(--danger); }
         .status-level { background: #064e3b; color: #d1fae5; border-color: var(--success); }
         .pos-out { background: #475569; color: #cbd5e1; }
         .pos-in { background: var(--accent); color: #020617; border: 2px solid #fff; }
         .level-reminder { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 8px; border-radius: 6px; font-size: 0.85rem; text-align: center; font-weight: bold; border: 1px solid rgba(56, 189, 248, 0.3); margin-bottom: 10px; }
-
         .header { text-align: center; margin: 15px 0; max-width: 800px; }
         .calendar-wrap { width: 100%; height: 250px; border-radius: 8px; overflow: hidden; background: #000; filter: invert(90%) hue-rotate(180deg); }
         iframe { width: 100%; height: 100%; border: none; }
+
+        /* ── MATRIX TERMINAL CARD ─────────────────────────────────────── */
+        .matrix-card {
+            grid-column: 1 / -1;
+            background: #000;
+            border: 1px solid #00ff41;
+            border-radius: 4px;
+            padding: 0;
+            font-family: 'Share Tech Mono', monospace;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.15), inset 0 0 60px rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.015) 2px,
+                rgba(0, 255, 65, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .matrix-header {
+            background: #00ff41;
+            color: #000;
+            padding: 8px 15px;
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .matrix-header .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .matrix-body {
+            padding: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .matrix-section {
+            border: 1px solid #003b0f;
+            padding: 10px;
+            border-radius: 2px;
+            background: rgba(0, 255, 65, 0.02);
+        }
+
+        .matrix-section-title {
+            color: #00ff41;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        .matrix-value {
+            font-family: 'VT323', monospace;
+            font-size: 1.8rem;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .matrix-label {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        .matrix-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #001a05;
+            font-size: 0.75rem;
+        }
+
+        .matrix-row:last-child { border-bottom: none; }
+
+        .matrix-key { color: #00ff41; opacity: 0.6; letter-spacing: 1px; }
+        .matrix-val { color: #00ff41; font-family: 'VT323', monospace; font-size: 1rem; }
+
+        .m-green { color: #00ff41; }
+        .m-red { color: #ff0041; }
+        .m-yellow { color: #ffd700; }
+        .m-cyan { color: #00ffff; }
+        .m-dim { opacity: 0.4; }
+
+        .matrix-status-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .pill-online { background: rgba(0, 255, 65, 0.15); border: 1px solid #00ff41; color: #00ff41; }
+        .pill-offline { background: rgba(255, 0, 65, 0.15); border: 1px solid #ff0041; color: #ff0041; }
+        .pill-paper { background: rgba(255, 215, 0, 0.15); border: 1px solid #ffd700; color: #ffd700; }
+        .pill-long { background: rgba(0, 255, 65, 0.2); border: 1px solid #00ff41; color: #00ff41; }
+        .pill-flat { background: rgba(100, 100, 100, 0.2); border: 1px solid #444; color: #888; }
+
+        .matrix-log {
+            border: 1px solid #003b0f;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0, 255, 65, 0.02);
+            margin-top: 10px;
+        }
+
+        .matrix-log::-webkit-scrollbar { width: 4px; }
+        .matrix-log::-webkit-scrollbar-track { background: #000; }
+        .matrix-log::-webkit-scrollbar-thumb { background: #00ff41; }
+
+        .log-entry {
+            font-size: 0.7rem;
+            padding: 2px 0;
+            border-bottom: 1px solid #001a05;
+            display: flex;
+            gap: 10px;
+        }
+
+        .log-time { color: #00ff41; opacity: 0.5; min-width: 80px; }
+        .log-action-buy { color: #00ff41; }
+        .log-action-sell { color: #ff0041; }
+        .log-pnl-pos { color: #00ff41; }
+        .log-pnl-neg { color: #ff0041; }
+
+        .matrix-ticker {
+            font-family: 'VT323', monospace;
+            font-size: 0.85rem;
+            color: #00ff41;
+            opacity: 0.4;
+            text-align: center;
+            padding: 5px 0;
+            letter-spacing: 1px;
+            border-top: 1px solid #001a05;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .refresh-indicator {
+            font-size: 0.6rem;
+            color: #00ff41;
+            opacity: 0.4;
+            letter-spacing: 2px;
+        }
+
+        /* Scanline effect */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 65, 0.05);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Pnl colors */
+        .pnl-pos { color: #00ff41; }
+        .pnl-neg { color: #ff0041; }
+        .pnl-zero { color: #ffd700; }
     </style>
 </head>
 <body>
@@ -61,6 +243,194 @@
     </div>
 
     <div class="grid">
+
+        <!-- ── MATRIX TRADING TERMINAL ─────────────────────────────────── -->
+        <div class="matrix-card">
+            <div class="scanline"></div>
+            <div class="matrix-header">
+                <span>▶ BENJAMIN CLARKE INC. // TRADING AGENT v6.0</span>
+                <span class="refresh-indicator" id="refresh-timer">REFRESH IN 30s</span>
+                <span class="blink">█</span>
+            </div>
+            <div class="matrix-body">
+
+                <!-- Top status bar -->
+                <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; align-items:center;">
+                    <span id="agent-status-pill" class="matrix-status-pill pill-offline">● OFFLINE</span>
+                    <span id="paper-mode-pill" class="matrix-status-pill pill-paper">PAPER MODE</span>
+                    <span id="position-pill" class="matrix-status-pill pill-flat">FLAT</span>
+                    <span style="margin-left:auto; font-size:0.65rem; color:#00ff41; opacity:0.4;" id="last-update">LAST UPDATE: --</span>
+                </div>
+
+                <div class="matrix-grid">
+
+                    <!-- Account -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// ACCOUNT</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">BALANCE</span>
+                            <span class="matrix-val m-cyan" id="acct-balance">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">BUYING PWR</span>
+                            <span class="matrix-val m-cyan" id="buying-power">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">P&L TODAY</span>
+                            <span class="matrix-val" id="pnl-today">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">P&L WEEK</span>
+                            <span class="matrix-val" id="pnl-week">$--</span>
+                        </div>
+                    </div>
+
+                    <!-- Position -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// POSITION</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">SYMBOL</span>
+                            <span class="matrix-val m-cyan" id="pos-symbol">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">QTY</span>
+                            <span class="matrix-val" id="pos-qty">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">ENTRY</span>
+                            <span class="matrix-val" id="pos-entry">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">CURRENT</span>
+                            <span class="matrix-val" id="pos-current">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">OPEN P&L</span>
+                            <span class="matrix-val" id="pos-pnl">$--</span>
+                        </div>
+                    </div>
+
+                    <!-- Signal -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// SIGNAL ENGINE</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">MACD</span>
+                            <span class="matrix-val" id="sig-macd">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">HIST</span>
+                            <span class="matrix-val" id="sig-hist">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">PREV MACD</span>
+                            <span class="matrix-val m-dim" id="sig-prev-macd">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">PREV HIST</span>
+                            <span class="matrix-val m-dim" id="sig-prev-hist">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">MID GATE</span>
+                            <span class="matrix-val" id="sig-mid-hit">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">TOP GATE</span>
+                            <span class="matrix-val" id="sig-top-hit">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// FILTERS</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">ATR STATUS</span>
+                            <span class="matrix-val" id="atr-status">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">ATR CURRENT</span>
+                            <span class="matrix-val" id="atr-current">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">ATR AVG</span>
+                            <span class="matrix-val" id="atr-avg">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">2H HA</span>
+                            <span class="matrix-val" id="ha-2h">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">1H HA</span>
+                            <span class="matrix-val" id="ha-1h">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">TIER</span>
+                            <span class="matrix-val m-cyan" id="tier">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Today's stats -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// TODAY</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">TRADES</span>
+                            <span class="matrix-val" id="trades-today">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">WINS</span>
+                            <span class="matrix-val m-green" id="wins-today">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">LOSSES</span>
+                            <span class="matrix-val m-red" id="losses-today">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">WIN RATE</span>
+                            <span class="matrix-val" id="win-rate-today">--%</span>
+                        </div>
+                    </div>
+
+                    <!-- Weekly stats -->
+                    <div class="matrix-section">
+                        <div class="matrix-section-title">// THIS WEEK</div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">TRADES</span>
+                            <span class="matrix-val" id="trades-week">--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">WIN RATE</span>
+                            <span class="matrix-val" id="win-rate-week">--%</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">BEST TRADE</span>
+                            <span class="matrix-val m-green" id="best-trade">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">WORST TRADE</span>
+                            <span class="matrix-val m-red" id="worst-trade">$--</span>
+                        </div>
+                        <div class="matrix-row">
+                            <span class="matrix-key">TOTAL P&L</span>
+                            <span class="matrix-val" id="week-pnl">$--</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Trade log -->
+                <div class="matrix-section-title">// RECENT TRADES</div>
+                <div class="matrix-log" id="trade-log">
+                    <div class="log-entry"><span class="log-time">--:--:--</span><span class="m-dim">AWAITING DATA...</span></div>
+                </div>
+
+                <!-- Bottom ticker -->
+                <div class="matrix-ticker" id="matrix-ticker">
+                    SYSTEM INITIALIZING... CONNECTING TO QUESTRADE... LOADING SIGNAL ENGINE...
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ── EXISTING CARDS ──────────────────────────────────────────── -->
         <div class="card">
             <h2>The Legacy (May 16)</h2>
             <div id="countdown">...</div>
@@ -100,15 +470,191 @@
         <div class="card">
             <h2>Asset Manager ($2,500)</h2>
             <div class="level-reminder">4H LEVELS: 48.50 | 52.00</div>
-            
             <div id="market-status" class="status-box status-wait" onclick="toggleMarket()">WAIT (NO-MAN'S LAND)</div>
             <div id="position-status" class="status-box pos-out" onclick="togglePosition()">OUT OF TRADE</div>
             <p style="font-size: 0.65rem; color: #64748b; margin-top: 10px; text-align: center;">Ignore the noise. Trade the signal.</p>
         </div>
+
     </div>
 
     <script>
-        // MINDSET ROTATION
+        // ── CONFIG ──────────────────────────────────────────────────────
+        const VPS_IP   = '51.222.158.177';
+        const VPS_PORT = '5000';
+        const BASE_URL = `http://${VPS_IP}:${VPS_PORT}`;
+        let refreshCountdown = 30;
+
+        // ── FETCH AGENT STATUS ──────────────────────────────────────────
+        async function fetchAgentStatus() {
+            try {
+                const [statusRes, weeklyRes] = await Promise.all([
+                    fetch(`${BASE_URL}/status`),
+                    fetch(`${BASE_URL}/weekly`)
+                ]);
+                const status = await statusRes.json();
+                const weekly = await weeklyRes.json();
+                updateTerminal(status, weekly);
+            } catch (e) {
+                setOffline();
+            }
+        }
+
+        function setOffline() {
+            document.getElementById('agent-status-pill').className = 'matrix-status-pill pill-offline';
+            document.getElementById('agent-status-pill').textContent = '● OFFLINE';
+            document.getElementById('matrix-ticker').textContent = 'CONNECTION FAILED... RETRYING... CHECK VPS STATUS...';
+        }
+
+        function pnlClass(val) {
+            if (val > 0) return 'pnl-pos';
+            if (val < 0) return 'pnl-neg';
+            return 'pnl-zero';
+        }
+
+        function pnlStr(val) {
+            if (val === null || val === undefined || val === 0) return '$0.00';
+            return (val >= 0 ? '+$' : '-$') + Math.abs(val).toFixed(2);
+        }
+
+        function updateTerminal(s, w) {
+            // Status pill
+            const statusPill = document.getElementById('agent-status-pill');
+            statusPill.className = 'matrix-status-pill ' + (s.status === 'running' ? 'pill-online' : 'pill-offline');
+            statusPill.textContent = s.status === 'running' ? '● ONLINE' : '● OFFLINE';
+
+            // Paper mode
+            const paperPill = document.getElementById('paper-mode-pill');
+            paperPill.style.display = s.paper_mode ? 'inline-block' : 'none';
+
+            // Position pill
+            const posPill = document.getElementById('position-pill');
+            if (s.position) {
+                posPill.className = 'matrix-status-pill pill-long';
+                posPill.textContent = `LONG ${s.position}`;
+            } else {
+                posPill.className = 'matrix-status-pill pill-flat';
+                posPill.textContent = 'FLAT';
+            }
+
+            // Last update
+            document.getElementById('last-update').textContent = `LAST UPDATE: ${s.timestamp}`;
+
+            // Account
+            document.getElementById('acct-balance').textContent = s.account_balance ? `$${s.account_balance.toFixed(2)}` : '$--';
+            document.getElementById('buying-power').textContent = s.buying_power ? `$${s.buying_power.toFixed(2)}` : '$--';
+
+            const pnlTodayEl = document.getElementById('pnl-today');
+            pnlTodayEl.textContent = pnlStr(s.pnl_today);
+            pnlTodayEl.className = `matrix-val ${pnlClass(s.pnl_today)}`;
+
+            const pnlWeekEl = document.getElementById('pnl-week');
+            pnlWeekEl.textContent = pnlStr(s.pnl_week);
+            pnlWeekEl.className = `matrix-val ${pnlClass(s.pnl_week)}`;
+
+            // Position
+            document.getElementById('pos-symbol').textContent = s.position || '--';
+            document.getElementById('pos-qty').textContent = s.qty || '--';
+            document.getElementById('pos-entry').textContent = s.entry_price ? `$${s.entry_price.toFixed(2)}` : '$--';
+            document.getElementById('pos-current').textContent = s.current_price ? `$${s.current_price.toFixed(2)}` : '$--';
+
+            const openPnlEl = document.getElementById('pos-pnl');
+            openPnlEl.textContent = pnlStr(s.pnl_open);
+            openPnlEl.className = `matrix-val ${pnlClass(s.pnl_open)}`;
+
+            // Signals
+            const macdEl = document.getElementById('sig-macd');
+            macdEl.textContent = s.macd ? s.macd.toFixed(5) : '--';
+            macdEl.className = `matrix-val ${s.macd > 0 ? 'm-green' : s.macd < 0 ? 'm-red' : ''}`;
+
+            const histEl = document.getElementById('sig-hist');
+            histEl.textContent = s.hist ? s.hist.toFixed(5) : '--';
+            histEl.className = `matrix-val ${s.hist > 0 ? 'm-green' : s.hist < 0 ? 'm-red' : ''}`;
+
+            document.getElementById('sig-prev-macd').textContent = s.prev_macd ? s.prev_macd.toFixed(5) : '--';
+            document.getElementById('sig-prev-hist').textContent = s.prev_hist ? s.prev_hist.toFixed(5) : '--';
+
+            document.getElementById('sig-mid-hit').textContent = s.mid_gate_hit ? '✓ HIT' : '✗ NOT YET';
+            document.getElementById('sig-mid-hit').className = `matrix-val ${s.mid_gate_hit ? 'm-green' : 'm-dim'}`;
+
+            document.getElementById('sig-top-hit').textContent = s.top_gate_hit ? '✓ HIT' : '✗ NOT YET';
+            document.getElementById('sig-top-hit').className = `matrix-val ${s.top_gate_hit ? 'm-yellow' : 'm-dim'}`;
+
+            // Filters
+            const atrEl = document.getElementById('atr-status');
+            atrEl.textContent = s.atr_ok ? '✓ NORMAL' : '✗ HIGH VOL';
+            atrEl.className = `matrix-val ${s.atr_ok ? 'm-green' : 'm-red'}`;
+
+            document.getElementById('atr-current').textContent = s.atr_current ? s.atr_current.toFixed(4) : '--';
+            document.getElementById('atr-avg').textContent = s.atr_average ? s.atr_average.toFixed(4) : '--';
+
+            const ha2hEl = document.getElementById('ha-2h');
+            ha2hEl.textContent = s.ha_2h || '--';
+            ha2hEl.className = `matrix-val ${s.ha_2h === 'BULL' ? 'm-green' : s.ha_2h === 'BEAR' ? 'm-red' : 'm-dim'}`;
+
+            const ha1hEl = document.getElementById('ha-1h');
+            ha1hEl.textContent = s.ha_1h || '--';
+            ha1hEl.className = `matrix-val ${s.ha_1h === 'BULL' ? 'm-green' : s.ha_1h === 'BEAR' ? 'm-red' : 'm-dim'}`;
+
+            document.getElementById('tier').textContent = s.tier || '--';
+
+            // Today stats
+            document.getElementById('trades-today').textContent = s.trades_today || '0';
+            document.getElementById('wins-today').textContent = s.wins_today || '0';
+            document.getElementById('losses-today').textContent = s.losses_today || '0';
+            const winRateToday = s.trades_today > 0 ? ((s.wins_today / s.trades_today) * 100).toFixed(0) : '0';
+            document.getElementById('win-rate-today').textContent = winRateToday + '%';
+
+            // Weekly stats
+            document.getElementById('trades-week').textContent = w.trades || '0';
+            document.getElementById('win-rate-week').textContent = (w.win_rate || 0) + '%';
+
+            const bestEl = document.getElementById('best-trade');
+            bestEl.textContent = pnlStr(w.best_trade);
+
+            const worstEl = document.getElementById('worst-trade');
+            worstEl.textContent = pnlStr(w.worst_trade);
+
+            const weekPnlEl = document.getElementById('week-pnl');
+            weekPnlEl.textContent = pnlStr(w.total_pnl);
+            weekPnlEl.className = `matrix-val ${pnlClass(w.total_pnl)}`;
+
+            // Trade log
+            if (w.weekly_trades && w.weekly_trades.length > 0) {
+                const logEl = document.getElementById('trade-log');
+                logEl.innerHTML = w.weekly_trades.slice().reverse().map(t => `
+                    <div class="log-entry">
+                        <span class="log-time">${(t.timestamp || '--').substring(11, 19)}</span>
+                        <span class="${t.action === 'BUY' ? 'log-action-buy' : 'log-action-sell'}">${t.action || '--'}</span>
+                        <span>${t.symbol || '--'}</span>
+                        <span>${t.qty || '--'} @ $${(t.price || 0).toFixed(2)}</span>
+                        <span class="${(t.pnl || 0) >= 0 ? 'log-pnl-pos' : 'log-pnl-neg'}">${pnlStr(t.pnl)}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Ticker
+            const tickerMessages = [
+                `AGENT: ${s.status?.toUpperCase() || 'OFFLINE'} | POSITION: ${s.position || 'FLAT'} | MACD: ${(s.macd || 0).toFixed(5)} | HIST: ${(s.hist || 0).toFixed(5)} | ATR: ${s.atr_ok ? 'NORMAL' : 'HIGH-VOL'} | TIER: ${s.tier || 'NONE'} | P&L TODAY: ${pnlStr(s.pnl_today)} | WEEKLY: ${pnlStr(w.total_pnl)} | WIN RATE: ${w.win_rate || 0}%`
+            ];
+            document.getElementById('matrix-ticker').textContent = tickerMessages[0];
+        }
+
+        // ── REFRESH TIMER ───────────────────────────────────────────────
+        function startRefreshTimer() {
+            refreshCountdown = 30;
+            const timerEl = document.getElementById('refresh-timer');
+            const interval = setInterval(() => {
+                refreshCountdown--;
+                timerEl.textContent = `REFRESH IN ${refreshCountdown}s`;
+                if (refreshCountdown <= 0) {
+                    clearInterval(interval);
+                    fetchAgentStatus();
+                    startRefreshTimer();
+                }
+            }, 1000);
+        }
+
+        // ── EXISTING LOGIC ───────────────────────────────────────────────
         const verses = [
             '"A good name is better than precious ointment." (Eccl 7:1)',
             '"Sorrow is better than laughter: for by the sadness of the countenance the heart is made better." (Eccl 7:3)',
@@ -119,33 +665,29 @@
             "Kill the expert persona. Be the guy who gets it done."
         ];
 
-        // COUNTDOWN logic
         const targetDate = new Date("May 16, 2026 08:00:00").getTime();
         function updateCountdown() {
-            const now = new Date().getTime();
+            const now  = new Date().getTime();
             const diff = targetDate - now;
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             document.getElementById("countdown").innerHTML = days + " DAYS";
         }
         setInterval(updateCountdown, 1000);
 
-        // LIQUIDITY GUARD logic
         function updateLiquidityGuard() {
-            const now = new Date();
+            const now   = new Date();
             const today = now.getDate();
             const month = now.getMonth();
-            const year = now.getFullYear();
-
+            const year  = now.getFullYear();
             function getDaysUntil(targetDay) {
                 let targetDate = new Date(year, month, targetDay);
                 if (today > targetDay) targetDate = new Date(year, month + 1, targetDay);
                 return Math.ceil((targetDate - now) / (1000 * 60 * 60 * 24));
             }
-
             function styleGuard(elementId, daysId, targetDay) {
                 const days = getDaysUntil(targetDay);
-                const el = document.getElementById(elementId);
-                const txt = document.getElementById(daysId);
+                const el   = document.getElementById(elementId);
+                const txt  = document.getElementById(daysId);
                 txt.innerText = days + "d";
                 el.className = "bill-item " + (days <= 2 ? "bill-red" : days <= 5 ? "bill-yellow" : "bill-green");
             }
@@ -159,6 +701,7 @@
             else { box.className = 'status-box status-wait'; box.innerText = "WAIT (NO-MAN'S LAND)"; }
             localStorage.setItem('marketState', box.className);
         }
+
         function togglePosition() {
             const box = document.getElementById('position-status');
             if (box.classList.contains('pos-out')) { box.className = 'status-box pos-in'; box.innerText = "IN TRADE (EXPOSED)"; }
@@ -175,9 +718,8 @@
         window.onload = () => {
             const savedTasks = JSON.parse(localStorage.getItem('benDashboardTasks'));
             if (savedTasks) { document.getElementById('t1').value = savedTasks[0] || ""; document.getElementById('t2').value = savedTasks[1] || ""; document.getElementById('t3').value = savedTasks[2] || ""; }
-            
             const savedMarket = localStorage.getItem('marketState');
-            if (savedMarket) { 
+            if (savedMarket) {
                 const box = document.getElementById('market-status');
                 box.className = savedMarket;
                 box.innerText = savedMarket.includes('wait') ? "WAIT (NO-MAN'S LAND)" : "AT LEVEL - READY";
@@ -188,12 +730,15 @@
                 box.className = savedPosition;
                 box.innerText = savedPosition.includes('pos-out') ? "OUT OF TRADE" : "IN TRADE (EXPOSED)";
             }
-
             updateLiquidityGuard();
             updateCountdown();
-            const dayOfWeek = new Date().getDay(); 
+            const dayOfWeek = new Date().getDay();
             document.getElementById('keziyah-photo').src = `k${dayOfWeek + 1}.jpg`;
             document.getElementById('daily-mindset').innerText = verses[dayOfWeek];
+
+            // Start trading terminal
+            fetchAgentStatus();
+            startRefreshTimer();
         };
     </script>
 </body>
