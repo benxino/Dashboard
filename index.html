@@ -2,87 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benjamin's Command Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Benjamin's Command</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <style>
         :root {
-            --bg-main: #0f172a;
-            --bg-side: #1e293b;
-            --card-bg: #1e293b;
-            --accent-blue: #38bdf8;
-            --accent-pink: #f472b6;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
+            --bg-main: #0f172a; --bg-side: #1e293b; --card-bg: #1e293b;
+            --accent-blue: #38bdf8; --accent-pink: #f472b6; --success: #10b981;
+            --danger: #ef4444; --warning: #f59e0b; --text-main: #f8fafc; --text-dim: #94a3b8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: 80px; background: var(--bg-side); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 40px; border-right: 1px solid #334155; position: sticky; top: 0; height: 100vh; }
+        /* --- SIDEBAR (Fixed Mobile Position) --- */
+        .sidebar { width: 80px; background: var(--bg-side); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 40px; border-right: 1px solid #334155; position: fixed; height: 100vh; z-index: 1000; }
         .sidebar a { text-decoration: none; color: var(--text-dim); transition: 0.3s; }
-        .sidebar i { font-size: 1.5rem; cursor: pointer; }
-        .sidebar a:hover i { color: var(--accent-blue); transform: scale(1.1); }
-        .sidebar .active i { color: var(--accent-blue); }
+        .sidebar i { font-size: 1.5rem; }
+        .sidebar a:hover i { color: var(--accent-blue); }
         .power-btn i { color: var(--danger) !important; }
 
         /* --- MAIN CONTENT --- */
-        .main-container { flex: 1; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
+        .main-container { flex: 1; margin-left: 80px; padding: 30px; max-width: 1400px; width: calc(100% - 80px); }
 
         /* --- HEADER --- */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .user-profile { display: flex; align-items: center; gap: 15px; }
-        .user-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--accent-blue); padding: 2px; }
-        .search-status { background: var(--bg-side); padding: 10px 20px; border-radius: 12px; font-size: 0.85rem; display: flex; align-items: center; gap: 15px; border: 1px solid #334155; }
+        .user-avatar { width: 55px; height: 50px; border-radius: 50%; border: 2px solid var(--accent-blue); object-fit: cover; }
 
         /* --- KPI GRID --- */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--card-bg); border-radius: 20px; padding: 25px; border: 1px solid #334155; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); }
-        .card-label { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .card-value { font-size: 2.2rem; font-weight: 700; }
-        .card-subtext { font-size: 0.9rem; color: var(--text-dim); margin-top: 8px; font-weight: 500; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 25px; border: 1px solid #334155; position: relative; }
+        .card-label { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .card-value { font-size: 2rem; font-weight: 700; }
+        .card-subtext { font-size: 0.85rem; color: var(--text-dim); margin-top: 8px; }
 
         /* --- MIDDLE LAYOUT --- */
-        .layout-middle { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .graph-card { min-height: 350px; display: flex; flex-direction: column; }
-        .chart-area { flex: 1; display: flex; align-items: flex-end; justify-content: space-around; padding-top: 30px; gap: 10px; }
-        .chart-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; height: 100%; justify-content: flex-end; }
-        .bar { width: 100%; border-radius: 6px 6px 2px 2px; transition: 0.5s ease; min-height: 5px; position: relative; }
-        .bar:hover { filter: brightness(1.2); }
-        .bar-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; }
+        .layout-middle { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; margin-bottom: 25px; }
+        .stats-panel { display: flex; flex-direction: column; gap: 15px; }
+        .stat-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid #334155; }
+        .stat-label { font-size: 0.85rem; color: var(--text-dim); }
+        .stat-value { font-size: 1rem; font-weight: 600; }
 
-        /* --- STATS PANEL --- */
-        .stats-panel { display: flex; flex-direction: column; gap: 18px; }
-        .stat-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #334155; }
-        .stat-label { font-size: 0.9rem; color: var(--text-dim); }
-        .stat-value { font-size: 1.1rem; font-weight: 600; font-family: 'VT323', monospace; letter-spacing: 1px; }
+        /* --- TRADE LOG --- */
+        .trade-log { background: #0c1120; border-radius: 12px; padding: 15px; max-height: 350px; overflow-y: auto; font-size: 0.8rem; border: 1px solid #1e293b; }
+        .log-header { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; padding-bottom: 10px; border-bottom: 1px solid #334155; color: var(--text-dim); font-weight: 700; }
+        .log-entry { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; padding: 10px 0; border-bottom: 1px solid #1e293b; }
 
-        /* --- RESPONSIVENESS --- */
-        @media (max-width: 1024px) {
-            .layout-middle { grid-template-columns: 1fr; }
-        }
+        /* --- REGIME COLORS --- */
+        .regime-bull { color: var(--success); text-shadow: 0 0 10px rgba(16,185,129,0.3); }
+        .regime-bear { color: var(--danger); text-shadow: 0 0 10px rgba(239,68,68,0.3); }
+        .regime-side { color: var(--warning); text-shadow: 0 0 10px rgba(245,158,11,0.3); }
+
+        /* --- MOBILE RESPONSIVE --- */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; height: 60px; flex-direction: row; justify-content: space-around; padding: 0; position: fixed; bottom: 0; z-index: 100; border-right: none; border-top: 1px solid #334155; }
-            .main-container { padding-bottom: 80px; }
-            .card-value { font-size: 1.8rem; }
+            .sidebar { width: 100%; height: 70px; bottom: 0; flex-direction: row; justify-content: space-around; padding: 0; border-right: none; border-top: 1px solid #334155; }
+            .main-container { margin-left: 0; width: 100%; padding: 20px 20px 100px 20px; }
+            .layout-middle { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; gap: 15px; }
         }
-
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
-        .pos { color: var(--success); }
-        .neg { color: var(--danger); }
-        .neutral { color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
     <nav class="sidebar">
-        <a href="#" class="active"><i class="fas fa-th-large"></i></a>
+        <a href="#"><i class="fas fa-home" style="color: var(--accent-blue);"></i></a>
         <a href="https://www.tradingview.com/" target="_blank"><i class="fas fa-chart-line"></i></a>
         <a href="https://simplifi.quicken.com/" target="_blank"><i class="fas fa-briefcase"></i></a>
         <a href="https://mail.google.com/" target="_self"><i class="fas fa-users"></i></a>
@@ -90,161 +75,111 @@
     </nav>
 
     <main class="main-container">
-        
         <header class="header">
             <div class="user-profile">
                 <img src="k1.jpg" class="user-avatar" alt="BC">
                 <div>
-                    <h2 style="font-size: 1.3rem;">Hello Benjamin Clarke</h2>
-                    <p style="font-size: 0.8rem; color: var(--text-dim);">Executive Command Center v2.5</p>
+                    <h2>Hello Benjamin Clarke</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);" id="status-line">SYSTEM LIVE • PAPER MODE</p>
                 </div>
             </div>
-            <div class="search-status">
-                <span id="status-text"><i class="fas fa-circle" style="color: var(--success); font-size: 0.5rem;"></i> SYSTEM LIVE</span>
-                <span id="mode-badge" class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid var(--warning);">LIVE MODE</span>
+            <div id="market-regime-box" class="card" style="padding: 15px 25px; border-radius: 40px;">
+                <span class="card-label" style="margin:0;">TQQQ REGIME: <b id="regime-text" class="regime-side">CONSOLIDATING</b></span>
             </div>
         </header>
 
         <section class="kpi-grid">
             <div class="card">
-                <div class="card-label">Realized Profit (Today)</div>
+                <div class="card-label">Daily Realized P&L</div>
                 <div class="card-value" id="pnl-today">$0.00</div>
                 <div class="card-subtext" id="growth-day">+0.00% Account Growth</div>
             </div>
             <div class="card">
-                <div class="card-label">Active Market Holding</div>
-                <div class="card-value" id="current-pos">FLAT</div>
-                <div class="card-subtext" id="pos-qty">0 Shares Authorized</div>
+                <div class="card-label">Risk Profile</div>
+                <div class="card-value" id="risk-percent">50%</div>
+                <div class="card-subtext" id="risk-dollars">Allocating $0.00 per trade</div>
             </div>
             <div class="card">
-                <div class="card-label">Total Liquid Equity</div>
-                <div class="card-value" id="total-equity">$0.00</div>
-                <div class="card-subtext" id="buying-power">Buying Power: $0.00</div>
+                <div class="card-label">Active Exposure</div>
+                <div class="card-value" id="current-pos">FLAT</div>
+                <div class="card-subtext" id="pos-qty">0 Shares Tracking</div>
             </div>
         </section>
 
         <section class="layout-middle">
-            <!-- 6-Week Trend -->
-            <div class="card graph-card">
-                <div class="card-label">Weekly Trade Impact (6-Week Trend)</div>
-                <div class="chart-area" id="weekly-chart">
-                    <!-- Dynamic Bars -->
-                </div>
-            </div>
-
-            <!-- Financial Vitals -->
             <div class="card">
                 <div class="card-label">Account Vitals</div>
                 <div class="stats-panel">
-                    <div class="stat-row">
-                        <span class="stat-label">Daily Win Rate</span>
-                        <span class="stat-value neutral" id="win-rate-day">0%</span>
+                    <div class="stat-row"><span class="stat-label">Total Equity</span><span class="stat-value" id="total-equity">$0.00</span></div>
+                    <div class="stat-row"><span class="stat-label">Buying Power</span><span class="stat-value" id="buying-power">$0.00</span></div>
+                    <div class="stat-row"><span class="stat-label">Weekly Win Rate</span><span class="stat-value" id="win-rate">0%</span></div>
+                    <div class="stat-row"><span class="stat-label">Largest Drawdown</span><span class="stat-value" id="max-drawdown" style="color:var(--danger)">-$0.00</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-label">Recent Activity (Last 20)</div>
+                <div class="trade-log" id="trade-log">
+                    <div class="log-header">
+                        <span>TIME</span><span>ACTION</span><span>SYM</span><span>PRICE</span><span>PnL</span>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Weekly Growth</span>
-                        <span class="stat-value pos" id="growth-week">+0.00%</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Weekly Profit</span>
-                        <span class="stat-value" id="pnl-week">$0.00</span>
-                    </div>
-                    <div class="stat-row" style="border:none;">
-                        <span class="stat-label">Largest Drawdown</span>
-                        <span class="stat-value neg" id="max-drawdown">-$0.00</span>
-                    </div>
+                    <!-- Entries Injected Here -->
                 </div>
             </div>
         </section>
-
     </main>
 
     <script>
         const BASE_URL = `https://agent.benjaminclarke.co`;
 
-        async function refreshData() {
+        async function refresh() {
             try {
-                const [statusRes, weeklyRes] = await Promise.all([
-                    fetch(`${BASE_URL}/status`),
-                    fetch(`${BASE_URL}/weekly`)
-                ]);
-                const s = await statusRes.json();
-                const w = await weeklyRes.json();
+                const [sRes, wRes] = await Promise.all([fetch(`${BASE_URL}/status`), fetch(`${BASE_URL}/weekly`)]);
+                const s = await sRes.json();
+                const w = await wRes.json();
 
-                // 1. Hero Stats
-                const pnl = s.pnl_today || 0;
-                const bal = s.account_balance || 1; // Prevent div by zero
-                document.getElementById('pnl-today').textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toFixed(2);
-                document.getElementById('pnl-today').className = 'card-value ' + (pnl >= 0 ? 'pos' : 'neg');
+                // 1. Performance & Risk
+                document.getElementById('pnl-today').textContent = (s.pnl_today >= 0 ? '+$' : '-$') + Math.abs(s.pnl_today).toFixed(2);
+                document.getElementById('pnl-today').style.color = s.pnl_today >= 0 ? 'var(--success)' : 'var(--danger)';
                 
-                const dayGrowth = (pnl / bal) * 100;
-                document.getElementById('growth-day').textContent = `${dayGrowth >= 0 ? '+' : ''}${dayGrowth.toFixed(2)}% Daily Growth`;
+                const riskPct = 0.50; // We can grab this from Python if we add it to status
+                document.getElementById('risk-percent').textContent = (riskPct * 100) + '%';
+                document.getElementById('risk-dollars').textContent = `Allocating $${(s.buying_power * riskPct).toLocaleString()} per trade`;
 
-                // 2. Position
-                const pos = s.position || 'FLAT';
-                document.getElementById('current-pos').textContent = pos;
-                document.getElementById('current-pos').style.color = pos === 'TQQQ' ? 'var(--accent-blue)' : pos === 'SQQQ' ? 'var(--accent-pink)' : 'var(--text-main)';
-                document.getElementById('pos-qty').textContent = `${s.qty || 0} Shares Tracking`;
+                // 2. Regime & Mode
+                const regText = document.getElementById('regime-text');
+                regText.textContent = s.regime || "NEUTRAL";
+                regText.className = s.regime === 'BULLISH' ? 'regime-bull' : s.regime === 'BEARISH' ? 'regime-bear' : 'regime-side';
+                document.getElementById('status-line').textContent = `SYSTEM LIVE • ${s.paper_mode ? 'PAPER MODE' : 'LIVE TRADING'}`;
 
-                // 3. Equity
-                document.getElementById('total-equity').textContent = `$${(s.account_balance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-                document.getElementById('buying-power').textContent = `Buying Power: $${(s.buying_power || 0).toLocaleString()}`;
+                // 3. Position & Equity
+                document.getElementById('current-pos').textContent = s.position || 'FLAT';
+                document.getElementById('current-pos').style.color = s.position === 'TQQQ' ? 'var(--accent-blue)' : s.position === 'SQQQ' ? 'var(--accent-pink)' : 'var(--text-main)';
+                document.getElementById('total-equity').textContent = `$${s.account_balance.toLocaleString()}`;
+                document.getElementById('buying-power').textContent = `$${s.buying_power.toLocaleString()}`;
+                document.getElementById('win-rate').textContent = (w.win_rate || 0) + '%';
 
-                // 4. Vitals
-                // Calculating Win Rate Today from weekly trades slice (filtering for current date)
-                const todayStr = new Date().toISOString().split('T')[0];
-                const tradesToday = (w.weekly_trades || []).filter(t => t.timestamp.includes(todayStr) && t.action === 'SELL');
-                const winsToday = tradesToday.filter(t => t.pnl > 0).length;
-                const winRateToday = tradesToday.length > 0 ? (winsToday / tradesToday.length) * 100 : 0;
-                
-                document.getElementById('win-rate-day').textContent = `${winRateToday.toFixed(0)}%`;
-                document.getElementById('pnl-week').textContent = `$${(w.total_pnl || 0).toFixed(2)}`;
-                
-                const weekGrowth = ((w.total_pnl || 0) / bal) * 100;
-                document.getElementById('growth-week').textContent = `${weekGrowth >= 0 ? '+' : ''}${weekGrowth.toFixed(2)}%`;
-                
-                // Max Drawdown calculation (Simple session-based)
-                const drawdowns = (w.weekly_trades || []).filter(t => t.pnl < 0).map(t => t.pnl);
-                const maxDD = drawdowns.length > 0 ? Math.min(...drawdowns) : 0;
-                document.getElementById('max-drawdown').textContent = `-$${Math.abs(maxDD).toFixed(2)}`;
-
-                // 5. Mode Badge
-                const mode = document.getElementById('mode-badge');
-                mode.textContent = s.paper_mode ? "PAPER MODE" : "LIVE TRADING";
-                mode.style.borderColor = s.paper_mode ? "var(--warning)" : "var(--success)";
-                mode.style.color = s.paper_mode ? "var(--warning)" : "var(--success)";
-
-                // 6. 6-Week Trend Chart Mockup
-                const chart = document.getElementById('weekly-chart');
-                chart.innerHTML = '';
-                // Since our API gives trades, we aggregate the last 6 trades or 6 logical chunks
-                const trendData = w.weekly_trades ? w.weekly_trades.slice(-6) : [0,0,0,0,0,0];
-                trendData.forEach((t, i) => {
-                    const col = document.createElement('div');
-                    col.className = 'chart-column';
-                    const val = t.pnl || 0;
-                    const bar = document.createElement('div');
-                    bar.className = 'bar';
-                    bar.style.height = Math.max(Math.abs(val) * 0.5, 10) + 'px'; // Scaled for visibility
-                    bar.style.maxHeight = '200px';
-                    bar.style.background = val >= 0 ? 'var(--success)' : 'var(--danger)';
-                    bar.style.boxShadow = `0 0 15px ${val >= 0 ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`;
-                    
-                    const lbl = document.createElement('span');
-                    lbl.className = 'bar-label';
-                    lbl.textContent = `W${i+1}`;
-                    
-                    col.appendChild(bar);
-                    col.appendChild(lbl);
-                    chart.appendChild(col);
+                // 4. Recent Trades (Last 20)
+                const log = document.getElementById('trade-log');
+                const trades = w.weekly_trades || [];
+                let html = '<div class="log-header"><span>TIME</span><span>ACTION</span><span>SYM</span><span>PRICE</span><span>PnL</span></div>';
+                trades.slice().reverse().slice(0, 20).forEach(t => {
+                    const time = t.timestamp.substring(11, 16);
+                    const pnlCol = t.pnl >= 0 ? 'var(--success)' : 'var(--danger)';
+                    html += `<div class="log-entry">
+                        <span>${time}</span>
+                        <span style="color:${t.action === 'BUY' ? 'var(--accent-blue)' : 'var(--accent-pink)'}">${t.action}</span>
+                        <span>${t.symbol}</span>
+                        <span>$${t.price}</span>
+                        <span style="color:${pnlCol}">${t.pnl ? '$' + t.pnl.toFixed(2) : '-'}</span>
+                    </div>`;
                 });
+                log.innerHTML = html;
 
-            } catch (e) {
-                document.getElementById('status-text').innerHTML = '<i class="fas fa-circle" style="color: var(--danger); font-size: 0.5rem;"></i> OFFLINE';
-            }
+            } catch (e) { console.log("Offline"); }
         }
-
-        setInterval(refreshData, 30000);
-        window.onload = refreshData;
+        setInterval(refresh, 10000);
+        window.onload = refresh;
     </script>
 </body>
 </html>
