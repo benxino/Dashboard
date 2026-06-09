@@ -130,66 +130,75 @@
     <script>
         const BASE_URL = `https://agent.benjaminclarke.co`;
 
-        async function update() {
-            try {
-                const [sR, wR] = await Promise.all([fetch(`${BASE_URL}/status`), fetch(`${BASE_URL}/weekly`)]);
-                const s = await sR.json(); const w = await wR.json();
+async function update() {
+    try {
+        const [sR, wR] = await Promise.all([fetch(`${BASE_URL}/status`), fetch(`${BASE_URL}/weekly`)]);
+        const s = await sR.json(); 
+        const w = await wR.json();
 
-                // PnL & Growth
-                const pnl = s.pnl_today || 0;
-                const bal = s.account_balance || 1;
-                document.getElementById('pnl-today').textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toFixed(2);
-                document.getElementById('pnl-today').style.color = pnl >= 0 ? 'var(--success)' : 'var(--danger)';
-                document.getElementById('growth-day').textContent = `${((pnl/bal)*100).toFixed(2)}% Daily Account Growth`;
+        // 1. Daily Realized P&L
+        const pnl = s.pnl_today || 0;
+        const bal = s.account_balance || 10000; // Use paper balance if live is 0
+        document.getElementById('pnl-today').textContent = (pnl >= 0 ? '+$' : '-$') + Math.abs(pnl).toFixed(2);
+        document.getElementById('pnl-today').style.color = pnl >= 0 ? 'var(--success)' : 'var(--danger)';
+        
+        // Fix: Daily Growth calculation
+        const dayGrowth = (pnl / bal) * 100;
+        document.getElementById('growth-day').textContent = `${dayGrowth.toFixed(2)}% Daily Account Growth`;
 
-                // Risk
-                const pct = s.pos_pct || 0.50;
-                document.getElementById('risk-pct').textContent = (pct * 100) + '%';
-                document.getElementById('risk-dollars').textContent = `Allocating $${(s.buying_power * pct).toLocaleString()} per trade`;
+        // 2. Risk Profile & Shares Per Trade
+        const pct = s.pos_pct || 0.50;
+        const buyPower = s.buying_power || 10000;
+        const allocation = buyPower * pct;
+        document.getElementById('risk-pct').textContent = (pct * 100) + '%';
+        document.getElementById('risk-dollars').textContent = `Allocating $${allocation.toLocaleString()} per trade`;
 
-                // Position
-                document.getElementById('current-pos').textContent = s.position || 'FLAT';
-                document.getElementById('current-pos').style.color = s.position === 'TQQQ' ? 'var(--accent-blue)' : s.position === 'SQQQ' ? 'var(--accent-pink)' : '#fff';
-                document.getElementById('pos-qty').textContent = `${s.qty || 0} Shares Tracking`;
+        // 3. Active Exposure (Shares)
+        document.getElementById('current-pos').textContent = s.position || s.active_sym || 'FLAT';
+        document.getElementById('current-pos').style.color = (s.position === 'TQQQ' || s.active_sym === 'TQQQ') ? 'var(--accent-blue)' : (s.position === 'SQQQ' || s.active_sym === 'SQQQ') ? 'var(--accent-pink)' : '#fff';
+        document.getElementById('pos-qty').textContent = `${s.qty || 0} Shares Currently Held`;
 
-                // Vitals
-                document.getElementById('bal').textContent = `$${(s.account_balance || 0).toLocaleString()}`;
-                document.getElementById('bp').textContent = `$${(s.buying_power || 0).toLocaleString()}`;
-                document.getElementById('growth-week').textContent = `${((w.total_pnl/bal)*100).toFixed(2)}%`;
-                
-                // Win Rate & Drawdown
-                const trades = w.weekly_trades || [];
-                const today = new Date().toISOString().split('T')[0];
-                const todayTrades = trades.filter(t => t.timestamp.includes(today) && t.action === 'SELL');
-                const wins = todayTrades.filter(t => t.pnl > 0).length;
-                document.getElementById('win-rate').textContent = todayTrades.length > 0 ? ((wins/todayTrades.length)*100).toFixed(0) + '%' : '0%';
-                
-                const dd = todayTrades.length > 0 ? Math.min(...todayTrades.map(t => t.pnl)) : 0;
-                document.getElementById('drawdown').textContent = `-$${Math.abs(dd).toFixed(2)}`;
+        // 4. Executive Vitals
+        document.getElementById('bal').textContent = `$${(s.account_balance || 0).toLocaleString()}`;
+        document.getElementById('bp').textContent = `$${(s.buying_power || 0).toLocaleString()}`;
+        
+        // Win Rate Today
+        const trades = w.weekly_trades || [];
+        const today = new Date().toISOString().split('T')[0];
+        const todaySellTrades = trades.filter(t => t.timestamp.includes(today) && t.action === 'SELL');
+        const wins = todaySellTrades.filter(t => t.pnl > 0).length;
+        document.getElementById('win-rate').textContent = todaySellTrades.length > 0 ? ((wins/todaySellTrades.length)*100).toFixed(0) + '%' : '0%';
 
-                // Regime & Mode
-                const rBox = document.getElementById('regime-box');
-                rBox.textContent = `MARKET: ${s.regime}`;
-                rBox.className = `regime-pill ${s.regime === 'BULLISH' ? 'bull' : s.regime === 'BEARISH' ? 'bear' : 'side'}`;
-                document.getElementById('mode-text').textContent = `SYSTEM LIVE • ${s.paper_mode ? 'PAPER MODE' : 'LIVE TRADING'}`;
+        // 5. Market Regime (The undefined fix)
+        const regime = s.regime || "CONSOLIDATING";
+        const rBox = document.getElementById('regime-box');
+        rBox.textContent = `MARKET: ${regime}`;
+        rBox.className = `regime-pill ${regime === 'BULLISH' ? 'bull' : regime === 'BEARISH' ? 'bear' : 'side'}`;
 
-                // Log (Last 20)
-                let h = '<div class="log-entry log-header"><span>TIME</span><span>ACTION</span><span>SYM</span><span>PRICE</span><span>PnL</span></div>';
-                trades.slice().reverse().slice(0, 20).forEach(t => {
-                    h += `<div class="log-entry">
-                        <span>${t.timestamp.substring(11, 16)}</span>
-                        <span style="color:${t.action === 'BUY' ? 'var(--accent-blue)' : 'var(--accent-pink)'}">${t.action}</span>
-                        <span>${t.symbol}</span>
-                        <span>$${t.price.toFixed(2)}</span>
-                        <span style="color:${t.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${t.pnl ? '$' + t.pnl.toFixed(2) : '-'}</span>
-                    </div>`;
-                });
-                document.getElementById('log').innerHTML = h;
+        // 6. Recent Activity Log
+        let h = '<div class="log-entry log-header"><span>TIME</span><span>ACTION</span><span>SYM</span><span>PRICE</span><span>PnL</span></div>';
+        trades.slice().reverse().slice(0, 20).forEach(t => {
+            const isBuy = t.action === 'BUY';
+            h += `<div class="log-entry">
+                <span>${t.timestamp.substring(11, 16)}</span>
+                <span style="color:${isBuy ? 'var(--accent-blue)' : 'var(--accent-pink)'}">${t.action}</span>
+                <span>${t.symbol}</span>
+                <span>$${t.price.toFixed(2)}</span>
+                <span style="color:${t.pnl >= 0 ? 'var(--success)' : 'var(--danger)'}">${t.pnl ? '$' + t.pnl.toFixed(2) : '-'}</span>
+            </div>`;
+        });
+        document.getElementById('log').innerHTML = h;
 
-            } catch (e) { console.error("Sync Error"); }
-        }
+    } catch (e) { 
+        console.error("Dashboard Sync Error:", e);
+        // If disconnected, show a visual hint
+        document.getElementById('status-line').textContent = "CONNECTION LOST • RECONNECTING...";
+        document.getElementById('status-line').style.color = "var(--danger)";
+    }
+}
 
-        setInterval(update, 10000); update();
+setInterval(update, 10000); 
+update();
     </script>
 </body>
 </html>
